@@ -31,7 +31,7 @@ class _ControlPadState extends State<ControlPad> {
       return;
     }
     print('left');
-    // bluetooth.write("d");
+    bluetooth.write("l");
   }
 
   moveRight() {
@@ -46,7 +46,7 @@ class _ControlPadState extends State<ControlPad> {
       return;
     }
     print('right');
-    // bluetooth.write("r");
+    bluetooth.write("r");
   }
 
   moveFront() async {
@@ -61,7 +61,7 @@ class _ControlPadState extends State<ControlPad> {
       return;
     }
     print('up');
-    // bluetooth.write("f");
+    bluetooth.write("f");
   }
 
   cancelMove() {
@@ -70,7 +70,7 @@ class _ControlPadState extends State<ControlPad> {
       return;
     }
     print('cancel');
-    // bluetooth.write("s");
+    bluetooth.write("s");
   }
 
   moveBack() {
@@ -85,7 +85,7 @@ class _ControlPadState extends State<ControlPad> {
       return;
     }
     print('down');
-    // bluetooth.write("b");
+    bluetooth.write("b");
   }
 
   @override
@@ -119,7 +119,8 @@ class _ControlPadState extends State<ControlPad> {
                           )
                       ),
                     ],
-                  )),
+                    )
+              ),
               SizedBox(
                   height: 50,
                   width: 150,

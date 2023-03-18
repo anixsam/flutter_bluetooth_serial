@@ -19,56 +19,59 @@ class _BluetoothSelectionState extends State<BluetoothSelection> {
   @override
   void initState() {
     super.initState();
-    // bluetoothStartScan();
+    bluetoothStartScan();
   }
   
   @override
   Widget build(BuildContext context) {
     
     return Scaffold(
-      appBar: AppBar(title: const Text("Select Bluetooth Device")),
-      // floatingActionButton: FloatingActionButton(onPressed: bluetoothStartScan,child: Icon(Icons.refresh)),
-      body: Column(
-        children: const [
-          SizedBox(
-            height: 10,
+      appBar: AppBar(title: const Text("Paired Devices")),
+      floatingActionButton: FloatingActionButton(onPressed: reScanBluetooth,child: Icon(Icons.refresh)),
+      body: ListView(
+        children:   
+              results.map((result) => ListTile(
+                title: Text(result.name ?? "Unknown device"),
+                subtitle: Text(result.address.toString()),
+                onTap: () async => {
+                  await bluetooth.connect(result).then(
+                    (value) => 
+                    {
+                      print("Connected to ${result.name}"),
+                      context.read<BluetoothConnectionState>().setConnectionState(true),
+                      Navigator.pop(context)
+                    }
+                  )
+                },
+              )).toList(),
           ),
-          Text(
-            "Paired Devices",
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          // ListView(
-          //   children:   
-          //     results.map((result) => ListTile(
-          //       title: Text(result.name ?? "Unknown device"),
-          //       subtitle: Text(result.address.toString()),
-          //       onTap: () async => {
-          //         // await bluetooth.connect(result).then(
-          //         //   (value) => 
-          //         //   {
-          //         //     print("Connected to ${result.name}"),
-          //         //     context.read<BluetoothConnectionState>().setConnectionState(true),
-          //         //     Navigator.pop(context)
-          //         //   }
-          //         // )
-          //       },
-          //     )).toList(),
-          // ),
-        ],
-      ),
-    );
+      );
   }
 
-  // bluetoothStartScan() {
-  //   print("Started Scan");
-  //   bluetooth.getBondedDevices().then((device) {
-  //     setState(() {
-  //       print("Scan Finished");
-  //       results = device;
-  //     });
-  //   });
-  // }
+  bluetoothStartScan() {
+    try
+    {
+      bluetooth.getBondedDevices().then((device) {
+        setState(() {
+          print("Scan Finished");
+          results = device;
+        });
+      });
+    }
+    catch(e)
+    {
+      print("ERROR" + e.toString());
+    }
+  }
+
+
+  reScanBluetooth() {
+    ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Scanning..."),
+          duration: Duration(seconds: 1),
+        )
+    );
+    bluetoothStartScan();
+  }
 }

@@ -2,6 +2,7 @@ import 'package:boat_control/providers/bluetooth_state.dart';
 import 'package:boat_control/screens/bluetooth_selection.dart';
 import 'package:boat_control/screens/home.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:provider/provider.dart';
 
@@ -25,11 +26,20 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  FlutterBluetoothSerial bluetooth = FlutterBluetoothSerial.instance;  
-
+  FlutterBluetoothSerial bluetooth = FlutterBluetoothSerial.instance; 
+   
   @override
   void initState() {
+     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+     checkBluetooth(); //enable fullscreen
     super.initState();
+  } 
+
+  checkBluetooth() async {
+    if(await bluetooth.isConnected)
+    {
+      context.read<BluetoothConnectionState>().setConnectionState(true);
+    }
   }
   // This widget is the root of your application.
   @override
